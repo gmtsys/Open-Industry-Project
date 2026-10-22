@@ -9,8 +9,10 @@
 
 FROM node:24-bookworm-slim AS build
 WORKDIR /src
-# 의존부터 — 소스만 바뀐 빌드는 이 층을 다시 쓴다
+# 의존부터 — 소스만 바뀐 빌드는 이 층을 다시 쓴다.
+# jolt-physics 는 npm 이 아니라 vendor/ 의 tgz 로 설치한다(package.json "file:vendor/…") — vendor 를 같이 넣어야 npm ci 가 찾는다
 COPY package.json package-lock.json ./
+COPY vendor ./vendor
 RUN npm ci --no-audit --no-fund
 COPY . .
 RUN npm run build
