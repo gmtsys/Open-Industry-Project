@@ -1,0 +1,14 @@
+# deploy/gcp/cloudbuild.yaml — 시뮬레이터 이미지를 Artifact Registry 로.
+#
+#   gcloud builds submit <저장소 루트> --config deploy/gcp/cloudbuild.yaml \
+#     --substitutions="_AR=asia-northeast3-docker.pkg.dev/gmt-cloud/gw-repo,_SHA=<커밋>" --project=gmt-cloud
+#
+# 올린 뒤 서비스는 포털 저장소 infra/sim.tf(처음 한 번) → 그다음부터 gcloud run services update portal-sim-<env> --image.
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args: ['build', '-f', 'deploy/gcp/Dockerfile', '-t', '${_AR}/portal-sim:${_SHA}', '.']
+images: ['${_AR}/portal-sim:${_SHA}']
+options:
+  # tsc · vite · 에셋 최적화가 무겁다 — 기본 기계(2 vCPU)로는 오래 걸린다
+  machineType: E2_HIGHCPU_8
+timeout: 1800s

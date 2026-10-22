@@ -1,0 +1,8 @@
+# deploy/gcp/Dockerfile 의 빌드 컨텍스트에서 뺄 것 — 이미지 안에서 npm ci · npm run build 를 새로 한다
+.git
+node_modules
+**/node_modules
+dist
+.types
+apps/desktop/release
+e2e/_dbg-*
